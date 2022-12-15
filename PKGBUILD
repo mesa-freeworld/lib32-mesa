@@ -56,7 +56,7 @@ END
 
   # swr driver is broken with some cpu see FS#66972
 
-  arch-meson mesa-$pkgver build \
+  arch-meson mesa-$pkgver --no-pager build \
     --native-file crossfile.ini \
     --libdir=/usr/lib32 \
     -D b_ndebug=true \
