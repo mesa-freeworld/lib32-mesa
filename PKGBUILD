@@ -56,7 +56,7 @@ END
 
   # swr driver is broken with some cpu see FS#66972
 
-  arch-meson mesa-$pkgver --no-pager build \
+  arch-meson mesa-$pkgver build \
     --native-file crossfile.ini \
     --libdir=/usr/lib32 \
     -D b_ndebug=true \
@@ -88,7 +88,7 @@ END
     -D valgrind=disabled
 
   # Print config
-  meson configure build
+  meson configure --no-pager build
 
   ninja -C build
   meson compile -C build
