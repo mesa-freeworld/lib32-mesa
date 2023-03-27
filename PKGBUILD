@@ -10,8 +10,8 @@
 pkgbase=lib32-mesa
 pkgname=('lib32-vulkan-mesa-layers' 'lib32-opencl-mesa' 'lib32-vulkan-intel' 'lib32-vulkan-radeon' 'lib32-vulkan-virtio' 'lib32-libva-mesa-driver' 'lib32-mesa-vdpau' 'lib32-mesa')
 pkgdesc="An open-source implementation of the OpenGL specification (32-bit)"
-pkgver=22.3.7
-pkgrel=2
+pkgver=23.0.1
+pkgrel=1
 arch=('x86_64')
 makedepends=('python-mako' 'lib32-libxml2' 'lib32-expat' 'lib32-libx11' 'xorgproto' 'lib32-libdrm'
              'lib32-libxshmfence' 'lib32-libxxf86vm' 'lib32-libxdamage' 'lib32-libvdpau'
@@ -21,17 +21,15 @@ makedepends=('python-mako' 'lib32-libxml2' 'lib32-expat' 'lib32-libx11' 'xorgpro
              'glslang' 'cmake' 'meson')
 url="https://www.mesa3d.org/"
 license=('custom')
-options=('!lto')
+options=('lto')
 source=(https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
-        0001-anv-force-MEDIA_INTERFACE_DESCRIPTOR_LOAD-reemit-aft.patch
-        0002-iris-Retry-DRM_IOCTL_I915_GEM_EXECBUFFER2-on-ENOMEM.patch
-        0003-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem.patch
+        0001-iris-Retry-DRM_IOCTL_I915_GEM_EXECBUFFER2-on-ENOMEM.patch
+        0002-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem.patch
         LICENSE)
-sha512sums=('c37bbcb3c0be1908726d6f83bfe98126d681935e401e03946e8b540611f832d2f272a2ac470600c2b77caa5b9a3a9059eb34bd9a93fcf88df114bedf8c39bf5a'
+sha512sums=('9bbe0ba0b1a16fe10b35b6aa3a821d96ab9c4ce4ad38056e2c32271e50b48fd5ef6e1a0babadded631f2b136dfb15acf0c41475d73ee28d132c861ce96517e24'
             'SKIP'
-            '44981f1f86b72eec0a358d1764546443a7e6734a074e1e15929dc4312fe660eab1a04b8a8359c5f57b6f5815cbe149677f5b3f0e3919112e78c6ec1f64a97b61'
-            'c181cc258a3a96817f9733be53e0ddf3f5b093ec8d7b731e37c095077c1b423d13ddb902993e1056aed29c4163421e4873b64f7593ef5e39d8cba11516651724'
-            '4f3ef686b2244c5da033596336bdffa42f9f55061be7125cba47a5ae3c16037523d1ba9d17269d141498b8ad2e020f25d9d778fdf307329809fc25d30d59c470'
+            'b089a84333743f2f69889f99903616a9dab28e45edf2de7b1f64d29bbb321daaf898aa05bf60fea6d2feec6b5ff072b807d76bb21efe122ff1a15e275d8acc97'
+            'ac4f1f98c5f1d0c2f875c2cf964fe60f41385b18a3507fea77f899f0cbbbea0baee92d313936f2d325c2301a7d0dfe3294bf881722fb22fa41defd4e4fbd0f98'
             'f9f0d0ccf166fe6cb684478b6f1e1ab1f2850431c06aa041738563eb1808a004e52cdec823c103c9e180f03ffc083e95974d291353f0220fe52ae6d4897fecc7')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
               '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
@@ -43,15 +41,10 @@ validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l
 prepare() {
   cd mesa-$pkgver
 
-  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/7111
-  # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/17247
-  # https://github.com/HansKristian-Work/vkd3d-proton/issues/1200
-  patch -Np1 -i ../0001-anv-force-MEDIA_INTERFACE_DESCRIPTOR_LOAD-reemit-aft.patch
-
   # https://gitlab.freedesktop.org/drm/intel/-/issues/6851
   # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/20449
-  patch -Np1 -i ../0002-iris-Retry-DRM_IOCTL_I915_GEM_EXECBUFFER2-on-ENOMEM.patch
-  patch -Np1 -i ../0003-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem.patch
+  patch -Np1 -i ../0001-iris-Retry-DRM_IOCTL_I915_GEM_EXECBUFFER2-on-ENOMEM.patch
+  patch -Np1 -i ../0002-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem.patch
 }
 
 build() {
@@ -65,7 +58,6 @@ build() {
   arch-meson mesa-$pkgver build \
     --libdir=/usr/lib32 \
     -D b_ndebug=true \
-    -D b_lto=false \
     -D platforms=x11,wayland \
     -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,swrast,i915,iris,crocus,zink \
     -D vulkan-drivers=amd,intel,intel_hasvk,virtio-experimental \
