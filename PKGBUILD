@@ -11,7 +11,7 @@ pkgbase=lib32-mesa
 pkgname=('lib32-vulkan-mesa-layers' 'lib32-opencl-mesa' 'lib32-vulkan-intel' 'lib32-vulkan-radeon' 'lib32-vulkan-virtio' 'lib32-libva-mesa-driver' 'lib32-mesa-vdpau' 'lib32-mesa')
 pkgdesc="An open-source implementation of the OpenGL specification (32-bit)"
 pkgver=23.0.1
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 makedepends=('python-mako' 'lib32-libxml2' 'lib32-expat' 'lib32-libx11' 'xorgproto' 'lib32-libdrm'
              'lib32-libxshmfence' 'lib32-libxxf86vm' 'lib32-libxdamage' 'lib32-libvdpau'
@@ -25,11 +25,13 @@ options=('lto')
 source=(https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
         0001-iris-Retry-DRM_IOCTL_I915_GEM_EXECBUFFER2-on-ENOMEM.patch
         0002-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem.patch
+        0003-intel-fs-fix-scheduling-of-HALT-instructions.patch
         LICENSE)
 sha512sums=('9bbe0ba0b1a16fe10b35b6aa3a821d96ab9c4ce4ad38056e2c32271e50b48fd5ef6e1a0babadded631f2b136dfb15acf0c41475d73ee28d132c861ce96517e24'
             'SKIP'
             'b089a84333743f2f69889f99903616a9dab28e45edf2de7b1f64d29bbb321daaf898aa05bf60fea6d2feec6b5ff072b807d76bb21efe122ff1a15e275d8acc97'
             'ac4f1f98c5f1d0c2f875c2cf964fe60f41385b18a3507fea77f899f0cbbbea0baee92d313936f2d325c2301a7d0dfe3294bf881722fb22fa41defd4e4fbd0f98'
+            '563bf3bf1407518214b5c30248514233bae0345f15dc15e2a6a8121f75262a09d7c3a15c82d57a133b634ed926c33f214a8911ebf165f25778d2758f2b32e6df'
             'f9f0d0ccf166fe6cb684478b6f1e1ab1f2850431c06aa041738563eb1808a004e52cdec823c103c9e180f03ffc083e95974d291353f0220fe52ae6d4897fecc7')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
               '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
@@ -45,6 +47,10 @@ prepare() {
   # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/20449
   patch -Np1 -i ../0001-iris-Retry-DRM_IOCTL_I915_GEM_EXECBUFFER2-on-ENOMEM.patch
   patch -Np1 -i ../0002-Revert-iris-Avoid-abort-if-kernel-can-t-allocate-mem.patch
+
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/7110
+  # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/20765
+  patch -Np1 -i ../0003-intel-fs-fix-scheduling-of-HALT-instructions.patch
 }
 
 build() {
