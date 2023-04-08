@@ -11,7 +11,7 @@ pkgbase=lib32-mesa
 pkgname=('lib32-vulkan-mesa-layers' 'lib32-opencl-mesa' 'lib32-vulkan-intel' 'lib32-vulkan-radeon' 'lib32-vulkan-virtio' 'lib32-libva-mesa-driver' 'lib32-mesa-vdpau' 'lib32-mesa')
 pkgdesc="An open-source implementation of the OpenGL specification (32-bit)"
 pkgver=23.0.2
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 makedepends=('python-mako' 'lib32-libxml2' 'lib32-expat' 'lib32-libx11' 'xorgproto' 'lib32-libdrm'
              'lib32-libxshmfence' 'lib32-libxxf86vm' 'lib32-libxdamage' 'lib32-libvdpau'
@@ -25,12 +25,20 @@ options=('lto')
 source=(https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
         0001-intel-fs-fix-scheduling-of-HALT-instructions.patch
         0002-egl-wayland-Fix-destruction-of-event-queue-with-prox.patch
+        0003-vulkan-wsi-wayland-Fix-destruction-of-event-queue-wi.patch
         LICENSE)
-sha512sums=('c60c47d9430870ce1888018c8d887538ffc18cceaaff8649b6d38207bad873bcf7b37182675cfb0d1d7bfc589c605d7aca3f80c925d983efbd5d03cdbdcf881b'
+sha256sums=('1b7d3399fc6f16f030361f925d33ebc7600cbf98094582f54775b6a1180529e7'
             'SKIP'
-            '563bf3bf1407518214b5c30248514233bae0345f15dc15e2a6a8121f75262a09d7c3a15c82d57a133b634ed926c33f214a8911ebf165f25778d2758f2b32e6df'
-            'cdbb46a2f8a2f6512658bd563d4dc789a37f2f088d79e7d06d4248ae114fbd50f06c83440fc6e0e8127f7781b5f4db93381c22a8e878bbee275db6bd6b0370e7'
-            'f9f0d0ccf166fe6cb684478b6f1e1ab1f2850431c06aa041738563eb1808a004e52cdec823c103c9e180f03ffc083e95974d291353f0220fe52ae6d4897fecc7')
+            'dc6790b5be0e80c23e74ae18ca1a2b40f57f4211cc7b645bf22b63af3b790e40'
+            'c25493de3e5930702acf833d182aeca0895d6a9d9e830dca15c42d130e25c41c'
+            'db2be7ae0540d65e77449eda1af66200e27af382183fdcd0c87f99db3520b80a'
+            '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
+b2sums=('5a90fcd8b7096dde1e6c82b9bb5b00622cc1cf35e4308419441d3489d66ed322843db89f2f1162c8c30f6bcddbce867447f83425a29145bd42a742b773ec1258'
+        'SKIP'
+        '37d1d070c45c85bce8abe3524a3f8d9ac9ed6326a3eec653cd89fffce3630b08eb9b96b11aeb495488230449c99f9b508f73a15e53265d2b159286b0e2dda7cc'
+        'ae891637318fdbb8dd58285098af7bea709fb032969a5671eb225a4a471bf9422fac2a6cb0fd188aad96ea5a03eb043f646f5d371dd655a100046adb1c91bd7d'
+        'a7312e0931904e659b3d33fcb37b13bcadab943c6040dd2b58ea191db350b50c1ba588e334b7e59b513bd6155797e29dc1bd1a6a35a278b3824d06534f2c9d17'
+        '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
               '946D09B5E4C9845E63075FF1D961C596A7203456'  # Andres Gomez <tanty@igalia.com>
               'E3E8F480C52ADD73B278EE78E1ECBE07D7D70895'  # Juan Antonio Suárez Romero (Igalia, S.L.) <jasuarez@igalia.com>
@@ -49,6 +57,10 @@ prepare() {
   # https://bugzilla.mozilla.org/show_bug.cgi?id=1826583
   # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/21646
   patch -Np1 -i ../0002-egl-wayland-Fix-destruction-of-event-queue-with-prox.patch
+
+  # https://bugs.archlinux.org/task/78142
+  # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/21647
+  patch -Np1 -i ../0003-vulkan-wsi-wayland-Fix-destruction-of-event-queue-wi.patch
 }
 
 build() {
