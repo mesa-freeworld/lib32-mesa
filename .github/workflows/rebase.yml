@@ -3,7 +3,7 @@ name: rebase
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '*/30 * * * *'
+    - cron: "*/30 * * * *"
 
 concurrency:
   group: rebase
@@ -19,6 +19,6 @@ jobs:
       - name: rebase
         uses: manjaro-contrib/action-rebase@main
         with:
-          upstream: https://gitlab.manjaro.org/packages/extra/mesa.git
+          upstream: https://gitlab.manjaro.org/packages/multilib/lib32-mesa.git
           dispatch-target: ${{ vars.PACKAGES_REPO }}
           dispatch-token: ${{ secrets.DISPATCH_TOKEN }}

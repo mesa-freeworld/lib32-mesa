@@ -1,8 +1,8 @@
 name: bootstrap
-on: 
+on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 1-23/2 * * *'
+    - cron: "0 1-23/2 * * *"
 
 jobs:
   bootstrap_actions:
@@ -16,4 +16,4 @@ jobs:
       - id: bootstrap
         uses: manjaro-contrib/action-bootstrap-actions@main
         with:
-          upstream: https://gitlab.manjaro.org/packages/extra/mesa.git
+          upstream: https://gitlab.manjaro.org/packages/multilib/lib32-mesa.git
