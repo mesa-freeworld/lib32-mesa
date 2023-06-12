@@ -29,7 +29,7 @@ jobs:
         id: upstream
         uses: manjaro-contrib/action-upstream-version@main
         with:
-          name: mesa
+          name: lib32-mesa
           version: ${{ steps.version.outputs.version }}
     outputs:
       version: ${{ steps.version.outputs.version }}
