@@ -84,10 +84,6 @@ prepare() {
   cd mesa-$pkgver
   # lastest staging patches
   patch -p1 -i ../mesa-staging-23.1-20230718.patch
-  # fix Chromium issues
-  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/9296
-  # https://gitlab.manjaro.org/packages/extra/mesa/-/issues/7
-  patch -p1 -i ../23c003b.patch
 }
 
 _libdir=usr/lib32
