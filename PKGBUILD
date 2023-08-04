@@ -11,7 +11,7 @@ pkgbase=lib32-mesa
 pkgname=(
   'lib32-vulkan-mesa-layers'
   'lib32-opencl-clover-mesa'
-  #'lib32-opencl-rusticl-mesa'
+  'lib32-opencl-rusticl-mesa'
   'lib32-vulkan-intel'
   'lib32-vulkan-radeon'
   'lib32-vulkan-swrast'
@@ -21,7 +21,7 @@ pkgname=(
   'lib32-mesa'
 )
 pkgver=23.1.5
-pkgrel=1
+pkgrel=2
 pkgdesc="An open-source implementation of the OpenGL specification (32-bit)"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -43,12 +43,15 @@ makedepends=(
   'lib32-libxxf86vm'
   'lib32-llvm'
   'lib32-lm_sensors'
+  'lib32-rust-libs'
+  'lib32-spirv-llvm-translator'
+  'lib32-spirv-tools'
   'lib32-systemd'
   'lib32-vulkan-icd-loader'
   'lib32-wayland'
   'lib32-zstd'
 
-  # shared with lib32-mesa
+  # shared between mesa and lib32-mesa
   'clang'
   'cmake'
   'elfutils'
@@ -56,9 +59,10 @@ makedepends=(
   'libclc'
   'meson'
   'python-mako'
+  'python-ply'
+  'rust-bindgen'
   'wayland-protocols'
   'xorgproto'
-
 )
 options=('lto')
 source=(
@@ -82,11 +86,9 @@ prepare() {
   cd mesa-$pkgver
 }
 
-_libdir=usr/lib32
-
 build() {
   local meson_options=(
-    --libdir=/$_libdir
+    --cross-file lib32
     -D android-libbacktrace=disabled
     -D b_ndebug=true
     -D dri3=enabled
@@ -96,7 +98,7 @@ build() {
     -D gallium-nine=true
     -D gallium-omx=disabled
     -D gallium-opencl=icd
-    -D gallium-rusticl=false
+    -D gallium-rusticl=true
     -D gallium-va=enabled
     -D gallium-vdpau=enabled
     -D gallium-xa=enabled
@@ -105,7 +107,7 @@ build() {
     -D gles2=enabled
     -D glvnd=true
     -D glx=dri
-    -D intel-clc=disabled
+    -D intel-clc=enabled
     -D libunwind=enabled
     -D llvm=enabled
     -D lmsensors=enabled
@@ -119,13 +121,17 @@ build() {
     -D vulkan-layers=device-select,intel-nullhw,overlay
   )
 
-  export CC="gcc -m32"
-  export CXX="g++ -m32"
-  export PKG_CONFIG="i686-pc-linux-gnu-pkg-config"
-  export LLVM_CONFIG="llvm-config32"
+  export BINDGEN_EXTRA_CLANG_ARGS="-m32"
 
   arch-meson mesa-$pkgver build "${meson_options[@]}"
-  meson configure --no-pager build # Print config
+  meson configure build --no-pager # Print config
+
+  # Evil: Hack build to make proc-macro crate native
+  sed -e '/^rule rust_COMPILER$/irule rust_HACK\n command = rustc -C linker=gcc $ARGS $in\n deps = gcc\n depfile = $targetdep\n description = Compiling native Rust source $in\n' \
+      -e '/^build src\/gallium\/frontends\/rusticl\/librusticl_proc_macros\.so:/s/rust_COMPILER/rust_HACK/' \
+      -e '/^ LINK_ARGS =/s/ src\/gallium\/frontends\/rusticl\/librusticl_proc_macros\.so//' \
+      -i build/build.ninja
+
   meson compile -C build
 
   # fake installation to be seperated into packages
@@ -142,6 +148,8 @@ _install() {
     mv -v "${src}" "${dir}/"
   done
 }
+
+_libdir=usr/lib32
 
 package_lib32-vulkan-mesa-layers() {
   pkgdesc="Mesa's Vulkan layers (32-bit)"
@@ -170,10 +178,10 @@ package_lib32-opencl-clover-mesa() {
     'lib32-expat'
     'lib32-libdrm'
     'lib32-libelf'
+    'lib32-spirv-llvm-translator'
     'lib32-zstd'
 
     'libclc'
-    'spirv-llvm-translator'
     'opencl-clover-mesa'
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
@@ -195,10 +203,11 @@ package_lib32-opencl-rusticl-mesa() {
     'lib32-expat'
     'lib32-libdrm'
     'lib32-libelf'
+    'lib32-lm_sensors'
+    'lib32-spirv-llvm-translator'
     'lib32-zstd'
 
     'libclc'
-    'spirv-llvm-translator'
     'opencl-rusticl-mesa'
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
