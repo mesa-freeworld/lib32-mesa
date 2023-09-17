@@ -42,7 +42,7 @@ makedepends=(
   'lib32-libxrandr'
   'lib32-libxshmfence'
   'lib32-libxxf86vm'
-  'lib32-llvm'
+  'lib32-llvm>=16.0.0'
   'lib32-lm_sensors'
   'lib32-rust-libs'
   'lib32-spirv-llvm-translator'
@@ -253,7 +253,7 @@ package_lib32-vulkan-radeon() {
     'lib32-libelf'
     'lib32-libx11'
     'lib32-libxshmfence'
-    'lib32-llvm-libs'
+    'lib32-llvm-libs>=16.0.0'
     'lib32-systemd'
     'lib32-wayland'
     'lib32-zstd'
@@ -277,7 +277,7 @@ package_lib32-vulkan-swrast() {
     'lib32-libunwind'
     'lib32-libx11'
     'lib32-libxshmfence'
-    'lib32-llvm-libs'
+    'lib32-llvm-libs>=16.0.0'
     'lib32-systemd'
     'lib32-wayland'
     'lib32-zstd'
@@ -320,7 +320,7 @@ package_lib32-libva-mesa-driver() {
     'lib32-libelf'
     'lib32-libx11'
     'lib32-libxshmfence'
-    'lib32-llvm-libs'
+    'lib32-llvm-libs>=16.0.0'
     'lib32-zstd'
   )
   provides=('lib32-libva-driver')
@@ -338,7 +338,7 @@ package_lib32-mesa-vdpau() {
     'lib32-libelf'
     'lib32-libx11'
     'lib32-libxshmfence'
-    'lib32-llvm-libs'
+    'lib32-llvm-libs>=16.0.0'
     'lib32-zstd'
   )
   provides=('lib32-vdpau-driver')
@@ -357,7 +357,7 @@ package_lib32-mesa() {
     'lib32-libxdamage'
     'lib32-libxshmfence'
     'lib32-libxxf86vm'
-    'lib32-llvm-libs'
+    'lib32-llvm-libs>=16.0.0'
     'lib32-lm_sensors'
     'lib32-vulkan-icd-loader'
     'lib32-wayland'
