@@ -7,7 +7,6 @@
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
-epoch=1
 pkgbase=lib32-mesa
 pkgname=(
   'lib32-vulkan-mesa-layers'
