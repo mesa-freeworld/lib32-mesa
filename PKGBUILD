@@ -20,7 +20,7 @@ pkgname=(
   'lib32-mesa-vdpau'
   'lib32-mesa'
 )
-pkgver=23.1.8
+pkgver=23.1.9
 pkgrel=1
 epoch=1
 pkgdesc="An open-source implementation of the OpenGL specification (32-bit)"
@@ -42,7 +42,7 @@ makedepends=(
   'lib32-libxrandr'
   'lib32-libxshmfence'
   'lib32-libxxf86vm'
-  'lib32-llvm>=16.0.0'
+  'lib32-llvm'
   'lib32-lm_sensors'
   'lib32-rust-libs'
   'lib32-spirv-llvm-translator'
@@ -70,10 +70,10 @@ source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
   LICENSE
 )
-sha256sums=('45434ff91a709844130a3174d9c0ef39c6b50725b2bb0c13e736f36134db14ad'
+sha256sums=('295ba27c28146ed09214e8ce79afa1659edf9d142decc3c91f804552d64f7510'
             'SKIP'
             '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
-b2sums=('43825c936f0dca4bc7e954cf7f8afc9566fb26d23969a9f60279a279504464b4eee966f5db34602489fb659942d11629675a1ef44493020925047bbd8cd7f0d7'
+b2sums=('a4386398841476f6e69031043091cbbf0afff1ef9523e7d6216b1acc49fa8afbe5270802c78d951fee42dd6c8268bc515ed1236de4ce47a5d90e6bdd1ff16b92'
         'SKIP'
         '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
@@ -90,6 +90,10 @@ prepare() {
   # its GPU cache; otherwise it can cause pages to render incorrectly.
   # https://bugs.launchpad.net/ubuntu/+source/chromium-browser/+bug/2020604
   echo "$pkgver-manjaro$epoch.$pkgrel" >VERSION
+
+  # https://bugs.archlinux.org/task/79821
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/9908
+  sed -i 's/not have_mtls_dialect/false/' meson.build
 }
 
 build() {
@@ -253,7 +257,7 @@ package_lib32-vulkan-radeon() {
     'lib32-libelf'
     'lib32-libx11'
     'lib32-libxshmfence'
-    'lib32-llvm-libs>=16.0.0'
+    'lib32-llvm-libs'
     'lib32-systemd'
     'lib32-wayland'
     'lib32-zstd'
@@ -277,7 +281,7 @@ package_lib32-vulkan-swrast() {
     'lib32-libunwind'
     'lib32-libx11'
     'lib32-libxshmfence'
-    'lib32-llvm-libs>=16.0.0'
+    'lib32-llvm-libs'
     'lib32-systemd'
     'lib32-wayland'
     'lib32-zstd'
@@ -320,7 +324,7 @@ package_lib32-libva-mesa-driver() {
     'lib32-libelf'
     'lib32-libx11'
     'lib32-libxshmfence'
-    'lib32-llvm-libs>=16.0.0'
+    'lib32-llvm-libs'
     'lib32-zstd'
   )
   provides=('lib32-libva-driver')
@@ -338,7 +342,7 @@ package_lib32-mesa-vdpau() {
     'lib32-libelf'
     'lib32-libx11'
     'lib32-libxshmfence'
-    'lib32-llvm-libs>=16.0.0'
+    'lib32-llvm-libs'
     'lib32-zstd'
   )
   provides=('lib32-vdpau-driver')
@@ -357,7 +361,7 @@ package_lib32-mesa() {
     'lib32-libxdamage'
     'lib32-libxshmfence'
     'lib32-libxxf86vm'
-    'lib32-llvm-libs>=16.0.0'
+    'lib32-llvm-libs'
     'lib32-lm_sensors'
     'lib32-vulkan-icd-loader'
     'lib32-wayland'
