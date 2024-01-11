@@ -19,6 +19,7 @@ pkgname=(
 pkgver=23.3.3
 pkgrel=1
 epoch=1
+epoch=10
 pkgdesc="An open-source implementation of the OpenGL specification (32-bit)"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
